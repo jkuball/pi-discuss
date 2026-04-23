@@ -1,0 +1,35 @@
+{
+  "name": "pi-discuss",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Tiny pi extension for discussing the last assistant answer via external-editor diffs",
+  "license": "MIT",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "llm",
+    "diff"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jkuball/pi-discuss.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jkuball/pi-discuss/issues"
+  },
+  "homepage": "https://github.com/jkuball/pi-discuss#readme",
+  "files": [
+    "index.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
