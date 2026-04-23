@@ -14,16 +14,9 @@ The model sees only the touched parts plus a bit of surrounding context.
 
 ## Usage
 
-Run:
+Whenever the model provides you with a way too long answer and you want to discuss specific parts of it, use `/discuss`.
 
-```text
-/discuss
-```
-
-Flow:
-
-The last answer of the model will be opened in the editor of your choice,
-where you can give direct feedback to specific parts of the answer.
+The last answer of the model will be opened in the editor of your choice, where you can give direct feedback to specific parts of the answer.
 You do not need a special annotation syntax. Just edit naturally.
 
 Example:
@@ -38,21 +31,10 @@ Example:
 +Retrying forever seems risky. Cap it and explain the failure mode.
 ```
 
+When you are done editing, the model will be provided with the diff as an anchor for your inline notes.
+
 ## Requirements
 
 - Tested on `pi` 0.69.x (nice), but probably works on way older versions.
-- `git` in `PATH`
-- `$VISUAL` or `$EDITOR` set to an editor command that waits for the file to close
-
-## Install
-
-Use it as a local extension, global extension, or install it from a git repo. See `pi install --help`.
-
-## Limitations
-
-- it only targets the last completed assistant answer
-- it only uses text parts from that answer
-- it assumes the diff is enough context for the follow-up
-- it relies on `git` and an external editor configured via `$VISUAL` or `$EDITOR`
-
-That is deliberate. This extension is supposed to stay small.
+- `git` in `$PATH`.
+- `$VISUAL` or `$EDITOR` set to an editor command that waits for the file to close.
