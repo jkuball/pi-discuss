@@ -14,7 +14,7 @@ The model sees only the touched parts plus a bit of surrounding context.
 
 ## Usage
 
-Whenever the model provides you with a way too long answer and you want to discuss specific parts of it, use `/discuss`.
+Use `/discuss` when it is your turn after the model yapped.
 
 The last answer of the model will be opened in the editor of your choice, where you can give direct feedback to specific parts of the answer.
 You do not need a special annotation syntax. Just edit naturally.
