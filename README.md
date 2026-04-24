@@ -8,7 +8,7 @@ Tiny `pi` extension for discussing the last assistant response by opening it in 
 - opens that answer directly in your external editor (`$VISUAL` / `$EDITOR`).
 - edits a tracked file inside a temporary git repo, so editor git integrations can highlight your changes while you write
 - computes a compact unified diff with small context hunks
-- sends only that diff back as the next user message
+- populates the diff into your next prompt so you can quickly revise it before sending
 
 The model sees only the touched parts plus a bit of surrounding context.
 
@@ -31,7 +31,7 @@ Example:
 +Retrying forever seems risky. Cap it and explain the failure mode.
 ```
 
-When you are done editing, the model will be provided with the diff as an anchor for your inline notes.
+Then close the editor, revise and send.
 
 ## Requirements
 

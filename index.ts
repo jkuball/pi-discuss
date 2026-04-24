@@ -242,7 +242,7 @@ export default function (pi: ExtensionAPI) {
 					return;
 				}
 
-				pi.sendUserMessage(buildDiscussionPrompt(diffResult.diff));
+				ctx.ui.setEditorText(buildDiscussionPrompt(diffResult.diff));
 			} finally {
 				rmSync(workspace.dir, { recursive: true, force: true });
 			}
