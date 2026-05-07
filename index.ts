@@ -1,13 +1,20 @@
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import type { ExtensionAPI, ExtensionCommandContext, SessionEntry } from "@mariozechner/pi-coding-agent";
+import { getAgentDir, type ExtensionAPI, type ExtensionCommandContext, type SessionEntry } from "@mariozechner/pi-coding-agent";
 
 const COMMAND_NAME = "discuss";
 const DIFF_CONTEXT_LINES = 2;
 const DISCUSSION_FILE_NAME = "assistant-answer.md";
+const CONFIG_FILE_NAME = "pi-discuss.json";
+const DEFAULT_DISCUSSION_PROMPT =
+	"See my answer as inline annotations in a diff to your recent message. Added lines are my notes, questions, corrections, and/or requests. Removed lines are the parts I edited or challenged. Unchanged lines are anchors.";
+
+interface PiDiscussConfig {
+	prompt?: string;
+}
 
 type GitResult =
 	| { ok: true; stdout: string; stderr: string; status: number }
@@ -45,14 +52,26 @@ function stripDiffHeaders(diffText: string): string {
 	return lines.slice(firstHunkIndex).join("\n").trim();
 }
 
-function buildDiscussionPrompt(diffText: string): string {
-	return [
-		"See my answer as inline annotations in a diff to your recent message. Added lines are my notes, questions, corrections, and/or requests. Removed lines are the parts I edited or challenged. Unchanged lines are anchors.",
-		"",
-		"```diff",
-		diffText,
-		"```",
-	].join("\n");
+function loadDiscussionPrompt(): string {
+	const configPath = path.join(getAgentDir(), "extensions", CONFIG_FILE_NAME);
+	if (!existsSync(configPath)) {
+		return DEFAULT_DISCUSSION_PROMPT;
+	}
+
+	try {
+		const parsed = JSON.parse(readFileSync(configPath, "utf8")) as PiDiscussConfig;
+		if (typeof parsed.prompt === "string" && parsed.prompt.trim().length > 0) {
+			return parsed.prompt.trim();
+		}
+	} catch {
+		// Fall back to the built-in default prompt.
+	}
+
+	return DEFAULT_DISCUSSION_PROMPT;
+}
+
+function buildDiscussionPrompt(diffText: string, promptText: string): string {
+	return [promptText, "", "```diff", diffText, "```"].join("\n");
 }
 
 function runGit(cwd: string, args: string[]): GitResult {
@@ -221,6 +240,7 @@ export default function (pi: ExtensionAPI) {
 			}
 
 			try {
+				const discussionPrompt = loadDiscussionPrompt();
 				const editorResult = await openDiscussionInExternalEditor(ctx, workspace.filePath);
 				if (!editorResult.ok) {
 					ctx.ui.notify(editorResult.error, editorResult.cancelled ? "info" : "error");
@@ -240,7 +260,7 @@ export default function (pi: ExtensionAPI) {
 					return;
 				}
 
-				ctx.ui.setEditorText(buildDiscussionPrompt(diffResult.diff));
+				ctx.ui.setEditorText(buildDiscussionPrompt(diffResult.diff, discussionPrompt));
 			} finally {
 				rmSync(workspace.dir, { recursive: true, force: true });
 			}

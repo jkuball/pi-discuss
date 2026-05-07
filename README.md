@@ -38,3 +38,7 @@ Then close the editor, revise and send.
 - Tested on `pi` 0.69.x (nice), but probably works on way older versions.
 - `git` in `$PATH`.
 - `$VISUAL` or `$EDITOR` set to an editor command that waits for the file to close.
+
+## Configuration
+
+By default, `pi-discuss` injects a small neutral prompt before the diff to give the agent some guideance. If it does not fit your needs, you can override it globally by creating `~/.pi/agent/extensions/pi-discuss.json` with a `prompt` attribute.
