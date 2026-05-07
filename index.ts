@@ -47,9 +47,7 @@ function stripDiffHeaders(diffText: string): string {
 
 function buildDiscussionPrompt(diffText: string): string {
 	return [
-		"Continue the discussion about your last answer using this diff.",
-		"Added lines are my notes, questions, corrections, or requests. Removed lines are the parts I edited or challenged. Unchanged lines are anchors.",
-		"Reply only where needed, and organize the response by diff hunk.",
+		"See my answer as inline annotations in a diff to your recent message. Added lines are my notes, questions, corrections, and/or requests. Removed lines are the parts I edited or challenged. Unchanged lines are anchors.",
 		"",
 		"```diff",
 		diffText,
